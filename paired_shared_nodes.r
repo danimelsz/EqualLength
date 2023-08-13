@@ -12,11 +12,6 @@ library(phytools)
 
 #### 1. FUNCTIONS ####
 
-# Update the index of nodes in the function pairwise_support
-update = function(node, n_tips){
-  ifelse(!is.na(node), node - n_tips - 1, node)
-}
-
 # Create dataframe with two columns of pairwise support values between 2 trees
 pairwise_support = function(tree1, tree2){
   # Drop tips not present in both trees
@@ -32,11 +27,12 @@ pairwise_support = function(tree1, tree2){
   d1 = Descendants(tree1, index$tr1) # descendants of tree1
   d2 = Descendants(tree2, index$tr2) # descendants of tree2
   # Note that it is required to substract the index of the internal node by the number of terminals
-  nodes$tr1 = update(nodes$tr1, tree1$Nnode)
-  nodes$tr2 = update(nodes$tr2, tree2$Nnode)
-  # Create dataframe with paired support values from 2 trees
-  sn = nodes$tr1
-  sn = data.frame(Index1 = index$tr1, Tree1 = tree1$node.label[sn], Index2 = index$tr2, Tree2 = tree2$node.label[sn])
+  nodes$tr1_updated = nodes$tr1 - tree1$Nnode - 1 # This -1 refers to the root (a node with only two edges without support value)
+  nodes$tr2_updated = nodes$tr2 - tree2$Nnode - 1 
+  # Create a dataframe with paired support values from 2 trees
+  sn1 = nodes$tr1_updated
+  sn2 = nodes$tr2_updated
+  sn = data.frame(Index1 = index$tr1, Tree1 = tree1$node.label[sn1], Index2 = index$tr2, Tree2 = tree2$node.label[sn2])
   sn = sn %>% filter_all(all_vars(. != "")) # remove empty row (from the root that does not show support value)
   return(sn)
 }
