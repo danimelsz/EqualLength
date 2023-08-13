@@ -3,7 +3,7 @@
 
 # Remove previously loaded objects
 rm(list= ls())
-# Set working directory in /home/danimelsz/Desktop/Doutorado/Support_Denis/
+# Set working directory in /home/danimelsz/Desktop/Doutorado/Support_Denis/ver2/
 
 library(ape)
 library(dplyr)
@@ -107,33 +107,28 @@ plot_2trees_1consensus = function(tree1, tree2, filename="2trees_1consensus.png"
 #### EXAMPLE 1: SIMULATED TREES WITH 5 TIPS ####
 
 # Read 2 fake trees
-tree1 = read.newick("ver2/tree1_singleTree.nwk")
-tree2 = read.newick("ver2/tree2_singleTree.nwk")
+tree1 = read.newick("tree1_singleTree.nwk")
+tree2 = read.newick("tree2_singleTree.nwk")
 
-# Create dataframe with pairwise support values of shared nodes
+# Pairwise support
 pairwise_support(tree1, tree2)
 
 # Plot trees and strict consensus (numbers in nodes are indexes, not support values)
-plot_2trees_1consensus(tree1, tree2, filename="2trees_1consensus_example1.png")
+plot_cophylo(ex_mol, ex_te, filename="ex2_cophylo_index.png",fsize=3, width=2000)
+plot_cophylo_support(tree1=ex_mol, tree2=ex_te, filename="ex2_cophylo_support.png",fsize=3, width=2000)
 
 
 #### EXAMPLE 2: EMPIRICAL SUBTREES WITH 9 TIPS FROM MONTESINOS (2017) ####
 
 # Read trees
-mol_hylodidae = read.newick("Support/example_trees/hylodidae_IP_mol_gb.nwk")
-te_hylodidae = read.newick("Support/example_trees/hylodidae_IP_te_gb.nwk")
-# Extract a clade
-ex_mol = extract.clade(mol_hylodidae[[1]], 674)
-ex_mol$Nnode
-write.tree(ex_mol, file="ver2/clade_mol_example.nwk")
-ex_te$Nnode
-ex_te = extract.clade(te_hylodidae[[1]], 572)
-write.tree(ex_te, file="ver2/clade_te_example.nwk")
-# Plot
-plot_2trees_1consensus(ex_mol, ex_te,filename="2trees_1consensus_example2.png", width=2000, height=1000, fsize=2)
-plot_cophylo(ex_mol, ex_te, filename="ex2_cophylo_index.png",fsize=3, width=2000)
-plot_cophylo_support(tree1=ex_mol, tree2=ex_te, filename="ex2_cophylo_support.png",fsize=3, width=2000)
+mol_hylodidae = read.newick("clade_mol_example.nwk")
+te_hylodidae = read.newick("clade_te_example.nwk")
+
 # Pairwise support
 data_ex2 = pairwise_support(ex_mol, ex_te)
 data_ex2
+
+# Plot
+plot_cophylo(ex_mol, ex_te, filename="ex2_cophylo_index.png",fsize=3, width=2000)
+plot_cophylo_support(tree1=ex_mol, tree2=ex_te, filename="ex2_cophylo_support.png",fsize=3, width=2000)
 
